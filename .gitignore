@@ -1,0 +1,15 @@
+*~
+*.log
+*.aux
+*.class
+
+## sbt files 
+target/
+project/
+
+# Eclipse specific
+.project
+.classpath
+.cache
+
+
