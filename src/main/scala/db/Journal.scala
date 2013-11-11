@@ -11,6 +11,8 @@ import java.sql.Timestamp
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import scala.slick.lifted.DDL
+import scala.language.implicitConversions
+import scala.language.postfixOps
 import com.sun.xml.internal.bind.v2.TODO
 import client._
 
@@ -79,7 +81,7 @@ object Thingy extends Controller {
     val (name, category, value) = support match {
       case Assisted(c, v) => ("Assisted", c, v)
       case Resisted(c, v) => ("Resisted", c, v)
-      case NoSupport() => ("No-support", "", "")
+      case NoSupport => ("No-support", "", "")
     }
 
     // Now check in db if support already exists. If true, retrieve its sup_id, else
@@ -113,10 +115,11 @@ object Thingy extends Controller {
   def insertBarbellSets(sets: Iterable[ExerciseSet], exercise: String) {
 
 	 val rows = for {
-
+		 
       set <- sets
-
-      val row = set match {
+      
+      // leave out the val keyword !
+      row = set match {
         case BarbellSet(e, st, rp, w, support, c) => BarbellExerciseRow(
           timestamp = timestamp,
           workout_id = currentWorkoutId,
@@ -124,6 +127,7 @@ object Thingy extends Controller {
         case b => throw new IllegalStateException("Unexpected type in this set list: " + b)
       }
     } yield row
+    
 
     // loan pattern: See Odersky et al chapter 9.
     // the session is loaned to the insert method.
@@ -136,7 +140,7 @@ object Thingy extends Controller {
           program="", location=""))(session)
       rows.foreach(BarbellTable.insert(_)(session))
     
-    } finally { session close }
+    } finally { session.close() }
   }
 
   def insertDumbbellSets(sets: Iterable[ExerciseSet], exercise: String) {
@@ -145,7 +149,7 @@ object Thingy extends Controller {
 
       set <- sets
 
-      val row = set match {
+      row = set match {
         case DumbbellSet(e, st, rp, w, support, c) => DumbbellExerciseRow(
           timestamp = timestamp,
           workout_id = currentWorkoutId,
@@ -172,7 +176,7 @@ object Thingy extends Controller {
 
       set <- sets
 
-      val row = set match {
+      row = set match {
         case BodyweightSet(e, st, rp, support, c) => BodyweightExerciseRow(
           timestamp = timestamp,
           workout_id = currentWorkoutId,

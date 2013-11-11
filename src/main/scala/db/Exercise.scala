@@ -21,14 +21,14 @@ object WorkoutTable extends Table[WorkoutRow]("WORKOUT") {
 	def * = date ~ id ~ exercise ~ category ~ program ~ location <> (WorkoutRow, WorkoutRow.unapply _)
 }
 
-abstract class ExerciseRow {
+trait ExerciseRow {
 	def timestamp: Timestamp 
 	def workout_id: Int
 	def name: String
 	def comment: String
 }
 
-abstract class StrengthExerciseRow extends ExerciseRow {
+trait StrengthExerciseRow extends ExerciseRow {
   
   def set: Int
   def rep: Int

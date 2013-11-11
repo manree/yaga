@@ -9,12 +9,9 @@ package client
  * Client side data classes. 
  *
  */
-class TrainingSession {}
-
-abstract class Support
 
 
-abstract class Exercise {
+trait Exercise {
   def name: String
 }
 
@@ -24,7 +21,7 @@ case class DumbbellExercise(name: String) extends Exercise
 
 case class BodyweightExercise(name: String) extends Exercise
 
-abstract class ExerciseSet {
+trait ExerciseSet {
   
   def exercise: Exercise 
   def set: Int
@@ -39,7 +36,9 @@ case class DumbbellSet(exercise: DumbbellExercise, set: Int, rep: Int, weight: D
 
 case class BodyweightSet(exercise: BodyweightExercise, set: Int, rep: Int, support: Support, comment: String) extends ExerciseSet
 
-case class NoSupport extends Support
+trait Support
+
+case object NoSupport extends Support
 
 case class Assisted(category: String, value: String) extends Support
 
